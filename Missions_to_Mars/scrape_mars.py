@@ -86,7 +86,7 @@ def scrape():
     image4 = hemisphere_image_urls[3]["img_url"]
           
 
-    # COMPARISON TABLE SCRAPE
+    # MARS FACTS SCRAPE
     table_url = "https://galaxyfacts-mars.com/"
     browser.visit(table_url)
     html_3 = browser.html
@@ -94,14 +94,12 @@ def scrape():
     table = soup_3.find_all("table", class_="table")[0]
 
     table_header = [i.text for i in table("th")]
-    mars_column = [i.text for i in table("span", class_="orange")]
-    earth_column = [i.text for i in table("span", class_="purple")]
+    mars_facts = [i.text for i in table("span", class_="orange")]
 
-    table_df = {"Description": table_header, "Mars": mars_column, "Earth": earth_column}
+    table_df = {"Parameter": table_header, "Value": mars_facts}
     df = pd.DataFrame(table_df)
-    df.set_index("Description", inplace=True)
-    df["Earth"] = df["Earth"].str.replace("\t", "")
-    comparison_table = df.to_html(classes="table table-striped")
+    df.set_index("Parameter", inplace=True)
+    html_table = df.to_html(classes="table table-striped")
 
     browser.quit()
 
@@ -112,7 +110,7 @@ def scrape():
     "latest_title": latest_news_title,
     "latest_paragraph" : latest_news_paragraph,
     "featured_image": featured_image_url,
-    "html_table": comparison_table,
+    "html_table": html_table,
     "hemisphere_scrape": hemisphere_image_urls,
     "title1": title1,
     "title2": title2,
